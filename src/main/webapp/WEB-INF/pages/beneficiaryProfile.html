@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
@@ -446,12 +446,19 @@
 
     <!-- Right section for image and description -->
     <div class="schedule-image">
-      <img src="https://i.ibb.co/55vvfdz/beneficiary-man-1.png" alt="Scheduled Activity Image">
+      <img th:src="${ben.image}" alt="Volunteer Image">
       <div class="image-description">
-        <p><strong>Name:</strong> Osvaldo Cruz </p>
-        <p><strong>Age:</strong> 82</p>
-        <p><strong>Location:</strong> Lisboa </p>
-        <p><strong>Interests:</strong> Domino, Cooking, Football, Crochet, Cinema </p>
+        <!-- Exibe o primeiro nome do voluntário dinamicamente -->
+        <p><strong>Name:</strong> <span th:text="${ben.firstName}"></span></p>
+
+        <!-- Exibe a idade dinamicamente -->
+        <p><strong>Age:</strong> <span th:text="${ben.age}">28</span></p>
+
+        <!-- Exibe a localização dinamicamente -->
+        <p><strong>Location:</strong> <span th:text="${ben.location}">Faro, Portugal</span></p>
+
+        <!-- Exibe os interesses dinamicamente -->
+        <p><strong>Interests:</strong> <span th:text="${ben.myInterestsList}">Traveling, Reading, Volunteering</span></p>
       </div>
     </div>
   </div>

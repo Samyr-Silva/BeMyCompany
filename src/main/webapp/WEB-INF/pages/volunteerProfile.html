@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -383,14 +383,22 @@
     </div>
     <!-- Right section for volunteer image and profile details -->
     <div class="schedule-image">
-        <img src="https://i.ibb.co/cyKLp5b/volunteer-woman-2.png" alt="Volunteer Image">
+        <img th:src="${vol.image}" alt="Volunteer Image">
         <div class="image-description">
-            <p><strong>Name:</strong> Marciá Mendez</p>
-            <p><strong>Age:</strong> 28</p>
-            <p><strong>Location:</strong> Faro, Portugal</p>
-            <p><strong>Interests:</strong> Traveling, Reading, Volunteering</p>
+            <!-- Exibe o primeiro nome do voluntário dinamicamente -->
+            <p><strong>Name:</strong> <span th:text="${vol.firstName}"></span></p>
+
+            <!-- Exibe a idade dinamicamente -->
+            <p><strong>Age:</strong> <span th:text="${vol.age}">28</span></p>
+
+            <!-- Exibe a localização dinamicamente -->
+            <p><strong>Location:</strong> <span th:text="${vol.location}">Faro, Portugal</span></p>
+
+            <!-- Exibe os interesses dinamicamente -->
+            <p><strong>Interests:</strong> <span th:text="${vol.myInterestsList}">Traveling, Reading, Volunteering</span></p>
         </div>
     </div>
+
 </div>
 <script>
     const scheduledItemsContainer = document.getElementById('scheduled-items');

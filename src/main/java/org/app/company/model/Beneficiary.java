@@ -2,25 +2,28 @@ package org.app.company.model;
 
 //import javax.persistence.*;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 //@Entity
 //@Table(name = "beneficiary")
 public class Beneficiary {
-    // @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE)
+  //  @Id
+   // @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private String firstName;
     private String lastName;
     private String image;
     private Integer age;
+    private String password;
+
     private Integer phone;
+
     private String email;
     private String location = "";
     private List<String> commonInterestsList;
     private List<String> myInterestsList = new ArrayList<>();
-
     public List<String> getMyInterestsList() {
         return myInterestsList;
     }
@@ -37,15 +40,16 @@ public class Beneficiary {
         populateMyInterestsList();
     }
 
-    //--------------------INTERESTS------------------------
 
+    //--------------------INTERESTS------------------------
     private boolean likesFootball;
+
     private boolean likesCinema;
     private boolean likesDomino;
     private boolean likesCrochet;
     private boolean likesCooking;
-
     //--------------------AVAILABILITY---------------------
+
     private boolean isAvailableMondayMorning;
     private boolean isAvailableMondayAfternoon;
     private boolean isAvailableTuesdayMorning;
@@ -60,8 +64,8 @@ public class Beneficiary {
     private boolean isAvailableSaturdayAfternoon;
     private boolean isAvailableSundayMorning;
     private boolean isAvailableSundayAfternoon;
-
     //-------------------SCHEDULED--------------------------
+
     private boolean isScheduledMondayMorning;
     private boolean isScheduledMondayAfternoon;
     private boolean isScheduledTuesdayMorning;
@@ -78,8 +82,8 @@ public class Beneficiary {
     private boolean isScheduledSundayAfternoon;
 
     //---------------------------ASSIGNED VOLUNTEERS----------------------------
+    //@OneToOne
 
-    // @OneToOne
     private Volunteer volunteerMondayMorning;
     //@OneToOne
     private Volunteer volunteerMondayAfternoon;
@@ -109,7 +113,6 @@ public class Beneficiary {
     private Volunteer volunteerSundayAfternoon;
 
     // ----------------------------METHODS--------------------------------------
-
 
     public Integer getId() {
         return id;
@@ -556,6 +559,14 @@ public class Beneficiary {
 
     public void setScheduledFridayAfternoon(boolean scheduledFridayAfternoon) {
         isScheduledFridayAfternoon = scheduledFridayAfternoon;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getLocation() {

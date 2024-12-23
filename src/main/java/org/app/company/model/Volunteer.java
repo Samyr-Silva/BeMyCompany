@@ -1,13 +1,15 @@
 package org.app.company.model;
 
 //import javax.persistence.*;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 //@Entity
 //@Table(name = "volunteer")
 public class Volunteer {
-  //  @Id
-   // @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  // @Id
+   //@GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private String firstName;
     private String lastName;
@@ -15,21 +17,35 @@ public class Volunteer {
     private Integer age;
     private Integer phone;
     private String email;
-    //private int commonInterests = 0;
+    private String password;
+    private List<String> myInterestsList = new ArrayList<>();
+
+    public List<String> getMyInterestsList() {
+        return myInterestsList;
+    }
+
+    public void populateMyInterestsList() {
+        myInterestsList.add("Cinema");
+        myInterestsList.add("Football");
+        myInterestsList.add("Domino");
+        myInterestsList.add("Crochet");
+        myInterestsList.add("Cooking");
+    }
+
     private List<String> commonInterestsList;
     private String location = "";
 
 //--------------------INTERESTS------------------------
-
     private boolean likesFootball;
+
     private boolean likesCinema;
     private boolean likesDomino;
     private boolean likesCrochet;
     private boolean likesCooking;
 
     //--------------------AVAILABILITY---------------------
-
     private boolean isAvailableMondayMorning;
+
     private boolean isAvailableMondayAfternoon;
     private boolean isAvailableTuesdayMorning;
     private boolean isAvailableTuesdayAfternoon;
@@ -45,8 +61,8 @@ public class Volunteer {
     private boolean isAvailableSundayAfternoon;
 
     //-------------------SCHEDULED--------------------------
-
     private boolean isScheduledMondayMorning;
+
     private boolean isScheduledMondayAfternoon;
     private boolean isScheduledTuesdayMorning;
     private boolean isScheduledTuesdayAfternoon;
@@ -58,8 +74,8 @@ public class Volunteer {
     private boolean isScheduledFridayAfternoon;
 
     //-------------------ASSOCIATED BENEFICIARY------------------
+    // @OneToOne
 
-    //@OneToOne
     private Beneficiary beneficiaryMondayMorning;
     //@OneToOne
     private Beneficiary beneficiaryMondayAfternoon;
@@ -90,7 +106,9 @@ public class Volunteer {
 
 //----------------------METHODS-----------------------------
 
-
+    public Volunteer(){
+        populateMyInterestsList();
+    }
     public Beneficiary getBeneficiaryMondayMorning() {
         return beneficiaryMondayMorning;
     }
@@ -268,11 +286,13 @@ public class Volunteer {
     }
 
     private boolean isScheduledSaturdayMorning;
+
     private boolean isScheduledSaturdayAfternoon;
     private boolean isScheduledSundayMorning;
     private boolean isScheduledSundayAfternoon;
 
     //--------------------------------------------------------------
+
     public String getFirstName() {
         return firstName;
     }
@@ -326,6 +346,10 @@ public class Volunteer {
     }
 
     public void setLikesFootball(boolean likesFootball) {
+        if(!likesFootball){
+            myInterestsList.remove("Football");
+        }
+
         this.likesFootball = likesFootball;
     }
 
@@ -334,6 +358,10 @@ public class Volunteer {
     }
 
     public void setLikesCinema(boolean likesCinema) {
+        if(!likesCinema){
+            myInterestsList.remove("Cinema");
+        }
+
         this.likesCinema = likesCinema;
     }
 
@@ -342,6 +370,10 @@ public class Volunteer {
     }
 
     public void setLikesDomino(boolean likesDomino) {
+        if(!likesDomino){
+            myInterestsList.remove("Domino");
+        }
+
         this.likesDomino = likesDomino;
     }
 
@@ -350,6 +382,10 @@ public class Volunteer {
     }
 
     public void setLikesCrochet(boolean likesCrochet) {
+        if(!likesCrochet){
+            myInterestsList.remove("Crochet");
+        }
+
         this.likesCrochet = likesCrochet;
     }
 
@@ -358,6 +394,10 @@ public class Volunteer {
     }
 
     public void setLikesCooking(boolean likesCooking) {
+        if(!likesCooking){
+            myInterestsList.remove("Cooking");
+        }
+
         this.likesCooking = likesCooking;
     }
 
@@ -533,6 +573,14 @@ public class Volunteer {
         this.id = id;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getLocation() {
         return location;
     }
@@ -550,6 +598,6 @@ public class Volunteer {
     }
 
     // public void setCommonInterests(int commonInterests) {
-   //     this.commonInterests = commonInterests;
-   // }
+    //     this.commonInterests = commonInterests;
+    // }
 }

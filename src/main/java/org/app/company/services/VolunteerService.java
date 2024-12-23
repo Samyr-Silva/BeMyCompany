@@ -15,14 +15,20 @@ public class VolunteerService {
     public VolunteerService(){
         Volunteer volunteer = new Volunteer();
         volunteer.setFirstName("Mariuson");
+        volunteer.setPassword("samyr");
         volunteer.setAge(28);
         volunteer.setLocation("Lisboa");
+        volunteer.setImage("https://i.ibb.co/RhhLrMG/volunteer-man-2.png");
+        volunteer.setEmail("maumau.silva@gmail.com");
         volunteer.setLikesCrochet(false);
         volunteer.setLikesFootball(false);
         volunteer.setLikesDomino(false);
 
         Volunteer volunteer2 = new Volunteer();
-        volunteer2.setFirstName("romario");
+        volunteer2.setFirstName("Felicity");
+        volunteer2.setEmail("felicity.silva@gmail.com");
+        volunteer2.setImage("https://i.ibb.co/5crktcj/volunteer-woman-3.png");
+        volunteer2.setPassword("gato");
         volunteer2.setAge(18);
         volunteer2.setLocation("Porto");
         volunteer2.setLikesCrochet(false);
@@ -30,6 +36,9 @@ public class VolunteerService {
 
         Volunteer volunteer3 = new Volunteer();
         volunteer3.setFirstName("aNDRE");
+        volunteer3.setEmail("andrezinho.silva@gmail.com");
+        volunteer3.setImage("https://i.ibb.co/cx9c4zG/volunteer-man-1.png");
+        volunteer3.setPassword("outstanding");
         volunteer3.setAge(39);
         volunteer3.setLocation("Braga");
         volunteer3.setLikesFootball(false);
@@ -45,6 +54,15 @@ public class VolunteerService {
     }
     public void addVolunteer (Volunteer volunteer){
         volunteerList.add(volunteer);
+    }
+
+    public Volunteer checkLogin(String email) {
+        for (Volunteer volunteer : volunteerList) {
+            if (volunteer.getEmail().equals(email)) { // Use equals para comparar Strings
+                return volunteer;
+            }
+        }
+        return null; // Retorna null se o voluntário não for encontrado
     }
 
     public List <Volunteer> list(){
