@@ -1,6 +1,7 @@
 package org.app.company.controllers;
 
 import org.app.company.model.Beneficiary;
+import org.app.company.model.Volunteer;
 import org.app.company.services.BeneficiaryService;
 import org.app.company.services.VolunteerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class BeneficiaryController {
@@ -35,30 +37,29 @@ public class BeneficiaryController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = {"/beneficiaryProfile", "/beneficiaryProfile/"})
-    public String getProfile() {
+    public String getProfile(
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            Model model
+    ) {
+        // Verifica se o email existe no banco de dados
+        Beneficiary beneficiary = beneficiaryService.checkLogin(email);
+
+        if (beneficiary == null || !beneficiary.getPassword().equals(password)) {
+            // Adiciona uma mensagem de erro ao modelo e redireciona para a página de login
+            model.addAttribute("error", "Invalid email or password");
+            return "beneficiaryLogin";
+        }
+
+        // Adiciona o voluntário ao modelo e carrega a página de perfil
+        model.addAttribute("ben", beneficiary);
         return "beneficiaryProfile";
     }
+
     @RequestMapping(method = RequestMethod.GET, path = {"/beneficiaryProfile", "/beneficiaryProfile/"})
     public String getProfileGet(Model model) {
          model.addAttribute("beneficiary", beneficiaryService.getBeneficiary());
         return "beneficiaryProfile";
     }
-    @RequestMapping(method = RequestMethod.GET, path = {"/beneficiarySchedule", "/beneficiarySchedule/"})
-    public String getSchedulePage() {
-        return "beneficiarySchedule";
-    }
-    @RequestMapping(method = RequestMethod.GET, path = {"/benef/home", "/benef/home/"})
-    public String getHomePage() {
-        return "home";
-    }
 
-    @RequestMapping(method = RequestMethod.GET, path = {"/benef/calendar", "/benef/calendar/"})
-    public String getCalendar() {
-        return "calendar";
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path = {"/benef/edit", "/benef/edit/"})
-    public String getEdit() {
-        return "edit";
-    }
 }
