@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -346,21 +347,80 @@
         #chatbot-toggle:hover {
             background: #2575FC;
         }
+         /* Style for scheduled activities */
+
+    .scheduled-activities {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .schedule-item {
+        display: flex;
+        justify-content: center;
+    }
+
+    .beneficiary-card {
+        width: 280px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        text-align: center;
+        background-color: #f9f9f9;
+    }
+
+    .beneficiary-card img {
+        width: 100%;
+        border-radius: 8px;
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .beneficiary-info {
+        margin-top: 10px;
+    }
+
+    .beneficiary-info p {
+        margin: 5px 0;
+        font-size: 14px;
+    }
+
+    .beneficiary-card button {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .beneficiary-card button:hover {
+        background-color: #d32f2f;
+    }
     </style>
 </head>
+
 <body>
+<div th:if="${message}" class="alert alert-success" role="alert">
+    <p th:text="${message}"></p>
+</div>
+<div th:if="${error}" class="alert alert-danger" role="alert">
+    <p th:text="${error}"></p>
+</div>
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">BeMyCompany</a>
+        <a class="navbar-brand" href="home.html">BeMyCompany</a>
         <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="homePage.html">Home</a>
-            <a class="nav-link" href="aboutPage.html">About</a>
-            <a class="nav-link" href="#">Services</a>
-            <a class="nav-link" href="#">Contact</a>
+            <a class="nav-link" href="home.html">Home</a>
+            <a class="nav-link" href="about.html">About</a>
+            <a class="nav-link" href="https://codeforall.com" target="_blank">Contact</a>
         </div>
     </div>
 </nav>
+
 <!-- Dropdown Button for User Profile -->
 <div class="dropdown">
     <button class="dropdown-btn">
@@ -368,24 +428,42 @@
              alt="User Icon">
     </button>
     <div class="dropdown-content">
-        <a href="index.html">Edit</a>
-        <a href="newPage.html">Schedule</a>
-        <a href="#">Log Out</a>
+        <a href="volunteerRegister.html">Edit</a>
+        <a href="beneficiarySchedule.html">Schedule</a>
+        <a href="home.html">Log Out</a>
     </div>
 </div>
+
 <div class="container">
     <!-- Left section for volunteer profile -->
     <div class="scheduled-activities">
         <h2>Scheduled Activities</h2>
         <div id="scheduled-items">
-            <p>No activities scheduled yet.</p>
+            <div id="scheduled-items-container">
+                <div th:each="beneficiary : ${beneficiaries}" class="schedule-item">
+                    <div class="beneficiary-card">
+                        <!-- Beneficiary Image -->
+                        <img th:src="@{${beneficiary.image}}" alt="Beneficiary Image">
+                        <div class="beneficiary-info">
+                            <p><strong>Name:</strong> <span th:text="${beneficiary.firstName}">Mauricia Doe</span></p>
+                            <p><strong>Age:</strong> <span th:text="${beneficiary.age}">82</span></p>
+                            <p><strong>Location:</strong> <span th:text="${beneficiary.location}">New York</span></p>
+                            <p><strong>Common Interests:</strong> <span
+                                    th:text="${beneficiary.myInterestsList}">Cinema</span></p>
+                        </div>
+                        <!-- Button to delete the scheduled activity -->
+                        <form th:action="@{'/delete/' + ${beneficiary.id}}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more beneficiary cards as needed -->
         </div>
     </div>
-    <!-- Right section for volunteer image and profile details -->
     <div class="schedule-image">
         <img th:src="${vol.image}" alt="Volunteer Image">
         <div class="image-description">
-            <!-- Exibe o primeiro nome do voluntário dinamicamente -->
             <p><strong>Name:</strong> <span th:text="${vol.firstName}"></span></p>
 
             <!-- Exibe a idade dinamicamente -->
@@ -395,148 +473,15 @@
             <p><strong>Location:</strong> <span th:text="${vol.location}">Faro, Portugal</span></p>
 
             <!-- Exibe os interesses dinamicamente -->
-            <p><strong>Interests:</strong> <span th:text="${vol.myInterestsList}">Traveling, Reading, Volunteering</span></p>
+            <p><strong>Interests:</strong> <span
+                    th:text="${vol.myInterestsList}">Traveling, Reading, Volunteering</span></p>
         </div>
     </div>
-
 </div>
-<script>
-    const scheduledItemsContainer = document.getElementById('scheduled-items');
-    // Function to delete a scheduled activity
-    function deleteScheduled(index) {
-        const activities = JSON.parse(localStorage.getItem('scheduledActivities')) || [];
-        activities.splice(index, 1); // Remove the activity at the given index
-        localStorage.setItem('scheduledActivities', JSON.stringify(activities)); // Update localStorage
-        loadScheduledActivities(); // Reload activities
-    }
-    // Load and display scheduled activities
-    function loadScheduledActivities() {
-        const activities = JSON.parse(localStorage.getItem('scheduledActivities')) || [];
-        // Clear current contents of scheduled items
-        scheduledItemsContainer.innerHTML = '';
-        // If there are no activities, display a message
-        if (activities.length === 0) {
-            scheduledItemsContainer.innerHTML = '<p>No activities scheduled yet.</p>';
-        } else {
-            // List of users (This can be expanded with more users)
-            const users = [
-                {
-                    name: "Mauricia Doe",
-                    age: 82,
-                    phone: "+1234567890",
-                    location: "New York",
-                    photo: "https://i.ibb.co/55vvfdz/beneficiary-man-1.png",
-                    commonInterests: "cinema"
-                },
-                {
-                    name: "John Smith",
-                    age: 77,
-                    phone: "+1234567891",
-                    location: "Los Angeles",
-                    photo: "https://i.ibb.co/XYjJFLp/beneficiary-woman-3.png",
-                    commonInterests: "domino, cooking"
-                },
-                {
-                    name: "Alice Johnson",
-                    age: 88,
-                    phone: "+1234567892",
-                    location: "Chicago",
-                    photo: "https://i.ibb.co/sVfd8jq/beneficiary-woman-1.png",
-                    commonInterests: "crochet, cinema"
-                },
-                {
-                    name: "Robert Brown",
-                    age: 72,
-                    phone: "+1234567893",
-                    location: "San Francisco",
-                    photo: "https://i.ibb.co/HYprhCb/beneficiary-man-2.png",
-                    commonInterests: "domino, cooking, football, crochet, cinema"
-                }
-            ];
-            // Loop through each activity and display it
-            activities.forEach((activity, index) => {
-                // Randomly select a user from the list of users
-                const randomUser = users[Math.floor(Math.random() * users.length)];
-                const activityDiv = document.createElement('div');
-                activityDiv.classList.add('schedule-item');
-                activityDiv.innerHTML = `
-                <img src="${randomUser.photo}" alt="Volunteer Image">
-                <div>
-                    <p><strong>${activity.weekday}</strong> - <strong>${activity.time}</strong> on <strong>${activity.date}</strong></p>
-                    <p><strong> Name: </strong>${randomUser.name}</p>
-                    <p><strong> Age: </strong>${randomUser.age}</p>
-                    <p><strong> Location: </strong>${randomUser.location}</p>
-                    <p><strong>Common Interests: </strong>${randomUser.commonInterests}</p>
-                    <button onclick="deleteScheduled(${index})">Delete</button>
-                </div>
-            `;
-                scheduledItemsContainer.appendChild(activityDiv);
-            });
-        }
-    }
-    // Load activities when the page is loaded
-    loadScheduledActivities();
-
-
-    const fakeResponses = {
-        "help": "This is an application to combat loneliness! You can register as a volunteer or an elderly person to spend time with others. For more information, check the 'About' page.",
-        "assistance": "Hello! I'm ChatBot, your virtual assistant. How can I help you today? :feliz:",
-        "what is your name": "I'm ChatBot Amigo, here to help you connect and combat loneliness.",
-        "bye": "Goodbye! I hope you have a wonderful day. Come back anytime!",
-        "register": "To register, choose whether you are a volunteer or an elderly person. Click the 'Register' button in the main menu.",
-        "login": "To log in, click the 'Login' button and enter your credentials. We're happy to see you again!",
-        "volunteer": "Volunteers are people who want to dedicate some of their time to chatting, playing, or even walking with our registered elderly. Thank you for your generosity!",
-        "elderly": "If you're an elderly person looking for company or a friendly conversation, you're in the right place! Register to meet volunteers willing to help.",
-        "activities": "Our activities include video call conversations, online games, accompanied walks, and much more. All designed to create bonds and pleasant moments!",
-        "how does it work?": "Our system connects volunteers with elderly people who need company. You can create your profile and schedule times to interact. It's simple and safe!",
-        "safety": "Safety is our priority. All volunteers undergo a verification process before connecting with the elderly.",
-        "loneliness": "Loneliness can be difficult, but here you'll find people willing to listen and share good moments with you.",
-        "schedule": "You can schedule a time to chat or participate in activities. Access the user area for more details.",
-        "contact": "If you need more help, contact us through the form on the 'Contact Us' page. We're here for you!"
-    };
-    function toggleChatbot() {
-        const chatbot = document.getElementById("chatbot-container");
-        chatbot.style.display = chatbot.style.display === "flex" ? "none" : "flex";
-    }
-    function sendMessage() {
-        const userInput = document.getElementById("user-input").value.trim().toLowerCase();
-        if (userInput === "") {
-            return;
-        }
-        const messagesDiv = document.getElementById("chatbot-messages");
-        const userMessage = document.createElement("div");
-        userMessage.className = "message user-message";
-        userMessage.textContent = userInput;
-        messagesDiv.appendChild(userMessage);
-        const botMessage = document.createElement("div");
-        botMessage.className = "message bot-message";
-        botMessage.textContent = fakeResponses[userInput] || "I'm not sure how to respond to that.";
-        messagesDiv.appendChild(botMessage);
-        document.getElementById("user-input").value = "";
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-<button id="chatbot-toggle" onclick="toggleChatbot()">:balão_de_fala:</button>
-<div id="chatbot-container">
-    <button id="chatbot-close" onclick="toggleChatbot()"></button>
-    <div id="chatbot-header">Chatbot</div>
-    <div id="chatbot-messages"></div>
-    <div id="chatbot-input">
-        <input type="text" id="user-input" placeholder="Type a message..." />
-        <button onclick="sendMessage()">Send</button>
-    </div>
-</div>
-<div id="chatbot-container">
-    <div id="chatbot-header">Chatbot</div>
-    <div id="chatbot-messages"></div>
-    <div id="chatbot-input">
-        <input type="text" id="user-input" placeholder="Type a message..." />
-        <button onclick="sendMessage()">Send</button>
-    </div>
-</div>
-</script>
 <!-- Footer -->
 <footer>
     <p>&copy; 2024 BeMyCompany. All rights reserved. <a href="#">Privacy Policy</a></p>
 </footer>
+
 </body>
 </html>

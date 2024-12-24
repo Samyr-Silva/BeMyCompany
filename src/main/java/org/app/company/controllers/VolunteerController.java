@@ -5,16 +5,14 @@ import org.app.company.services.VolunteerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class VolunteerController {
     @Autowired
     private VolunteerService volunteerService;
+
 
     @RequestMapping(method = RequestMethod.GET, path = {"/volunteerLogin", "volunteerLogin/"})
     public String getLoginPage() {
@@ -48,6 +46,7 @@ public class VolunteerController {
 
         // Adiciona o voluntário ao modelo e carrega a página de perfil
         model.addAttribute("vol", volunteer);
+        model.addAttribute("beneficiaries", volunteerService.listOfBeneficiaries());
         return "volunteerProfile";
     }
     @RequestMapping(method = RequestMethod.GET, path = {"/volunteerProfile", "/volunteerProfile/"})
@@ -55,4 +54,21 @@ public class VolunteerController {
         return "volunteerProfile";
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = {"/beneficiarySchedule", "/beneficiarySchedule/"})
+    public String getSchedule(){
+        return "beneficiarySchedule";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteBeneficiary(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        boolean isRemoved = volunteerService.removeBeneficiary(id);
+
+        if (isRemoved) {
+            redirectAttributes.addFlashAttribute("message", "Beneficiary removed successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Failed to remove beneficiary.");
+        }
+
+        return "redirect:/volunteerProfile";
+    }
 }
