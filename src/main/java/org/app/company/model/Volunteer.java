@@ -32,7 +32,19 @@ public class Volunteer {
 
 //----------------------METHODS-----------------------------
     public Volunteer(){
+        this.myBeneficiaries = new ArrayList<>();
         populateMyInterestsList();
+    }
+
+    public List<Beneficiary> getMyBeneficiaries() {
+        return myBeneficiaries;
+    }
+
+    public void addBeneiciary(Beneficiary beneficiary) {
+        myBeneficiaries.add(beneficiary);
+    }
+    public boolean removeBeneficiaryById(int id) {
+        return this.myBeneficiaries.removeIf(beneficiary -> beneficiary.getId() == id);
     }
 
     public void populateMyInterestsList() {
@@ -96,14 +108,6 @@ public class Volunteer {
 
     public boolean likesFootball() {
         return likesFootball;
-    }
-
-    public List<Beneficiary> getMyBeneficiaries() {
-        return myBeneficiaries;
-    }
-
-    public void setMyBeneficiaries(List<Beneficiary> myBeneficiaries) {
-        this.myBeneficiaries = myBeneficiaries;
     }
 
     public void setLikesFootball(boolean likesFootball) {
