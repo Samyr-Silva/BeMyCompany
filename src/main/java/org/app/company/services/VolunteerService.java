@@ -11,8 +11,8 @@ import java.util.List;
 @Service
 public class VolunteerService {
 
-    @Autowired
-    private BeneficiaryService beneficiaryService;
+
+    private BeneficiaryService beneficiaryService = new BeneficiaryService();
     private List<Volunteer> volunteerList = new ArrayList<>();
 
     public VolunteerService(){
@@ -27,6 +27,12 @@ public class VolunteerService {
         volunteer.setLikesCrochet(false);
         volunteer.setLikesFootball(false);
         volunteer.setLikesDomino(false);
+
+        List<Beneficiary> beneficiaries = beneficiaryService.getBeneficiaryList();
+        if (!beneficiaries.isEmpty()) {
+            volunteer.addBeneiciary(beneficiaries.get(0));
+            volunteer.addBeneiciary(beneficiaries.get(1));// Adicionando o primeiro beneficiário (por exemplo)
+        }
 
         Volunteer volunteer2 = new Volunteer();
         volunteer2.setFirstName("Felicity");
@@ -49,6 +55,13 @@ public class VolunteerService {
         volunteer3.setEmail("andrezinho.silva@gmail.com");
         volunteer3.setPassword("outstanding");
         volunteer3.setLikesFootball(false);
+
+        List<Beneficiary> beneficiariesOther = beneficiaryService.getBeneficiaryList();
+        if (!beneficiaries.isEmpty()) {
+            volunteer3.addBeneiciary(beneficiariesOther.get(0));
+            volunteer3.addBeneiciary(beneficiariesOther.get(1));
+            volunteer3.addBeneiciary(beneficiariesOther.get(2));
+        }
 
 
         addVolunteer(volunteer);
@@ -73,17 +86,35 @@ public class VolunteerService {
         return volunteerList;
     }
 
-    public List<Beneficiary> listOfBeneficiaries(){
-        return beneficiaryService.getBeneficiaryList();
+    public List<Beneficiary> listOfBeneficiaries(int volunteerId) {
+        Volunteer volunteer = findVolunteerById(volunteerId);
+        return volunteer != null ? volunteer.getMyBeneficiaries() : new ArrayList<>();
     }
 
-    public boolean removeBeneficiary(int id) {
-        if(listOfBeneficiaries().removeIf(beneficiary -> beneficiary.getId() == id)){
+    public boolean addBeneficiaryToVolunteer(int volunteerId, Beneficiary beneficiary) {
+        Volunteer volunteer = findVolunteerById(volunteerId);
+        if (volunteer != null) {
+            volunteer.addBeneiciary(beneficiary);
             return true;
         }
-        else{
-            return false;
+        return false;
+    }
+
+    public boolean removeBeneficiaryFromVolunteer(int volunteerId, int beneficiaryId) {
+        Volunteer volunteer = findVolunteerById(volunteerId);
+        if (volunteer != null) {
+            return volunteer.removeBeneficiaryById(beneficiaryId);
         }
+        return false;
+    }
+
+    public Volunteer findVolunteerById(int id) {
+        for (Volunteer volunteer : volunteerList) {
+            if (volunteer.getId() == id) {
+                return volunteer;
+            }
+        }
+        return null; // Retorna null se não encontrar o voluntário
     }
 
     public List<Beneficiary> myList(int id){

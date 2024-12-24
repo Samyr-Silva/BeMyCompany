@@ -13,7 +13,6 @@ public class VolunteerController {
     @Autowired
     private VolunteerService volunteerService;
 
-
     @RequestMapping(method = RequestMethod.GET, path = {"/volunteerLogin", "volunteerLogin/"})
     public String getLoginPage() {
         return "volunteerLogin";
@@ -29,6 +28,7 @@ public class VolunteerController {
         volunteerService.addVolunteer(volunteer);
         return "redirect:/volunteerProfile";
     }
+
     @RequestMapping(method = RequestMethod.POST, path = {"/volunteerProfile", "/volunteerProfile/"})
     public String getProfile(
             @RequestParam("email") String email,
@@ -46,22 +46,28 @@ public class VolunteerController {
 
         // Adiciona o voluntário ao modelo e carrega a página de perfil
         model.addAttribute("vol", volunteer);
-        model.addAttribute("beneficiaries", volunteerService.listOfBeneficiaries());
+        model.addAttribute("beneficiaries", volunteer.getMyBeneficiaries()); // Lista específica do voluntário
         return "volunteerProfile";
     }
+
     @RequestMapping(method = RequestMethod.GET, path = {"/volunteerProfile", "/volunteerProfile/"})
     public String getProfileGet() {
         return "volunteerProfile";
     }
 
     @RequestMapping(method = RequestMethod.GET, path = {"/beneficiarySchedule", "/beneficiarySchedule/"})
-    public String getSchedule(){
+    public String getSchedule() {
         return "beneficiarySchedule";
     }
 
-    @PostMapping("/delete/{id}")
-    public String deleteBeneficiary(@PathVariable int id, RedirectAttributes redirectAttributes) {
-        boolean isRemoved = volunteerService.removeBeneficiary(id);
+    @PostMapping("/delete/{volunteerId}/{beneficiaryId}")
+    public String deleteBeneficiary(
+            @PathVariable int volunteerId,
+            @PathVariable int beneficiaryId,
+            RedirectAttributes redirectAttributes
+    ) {
+        // Remove beneficiário da lista específica do voluntário
+        boolean isRemoved = volunteerService.removeBeneficiaryFromVolunteer(volunteerId, beneficiaryId);
 
         if (isRemoved) {
             redirectAttributes.addFlashAttribute("message", "Beneficiary removed successfully!");
@@ -70,5 +76,15 @@ public class VolunteerController {
         }
 
         return "redirect:/volunteerProfile";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = {"/volunteerCalendar/{id}", "/volunteerCalendar/{id}/"})
+    public String getCalendar(
+            @PathVariable int id,
+            Model model) {
+        Volunteer volunteer = volunteerService.findVolunteerById(id);
+        model.addAttribute("vol", volunteer);
+        model.addAttribute("beneficiaries", volunteer.getMyBeneficiaries());
+        return "volunteerCalendar";
     }
 }

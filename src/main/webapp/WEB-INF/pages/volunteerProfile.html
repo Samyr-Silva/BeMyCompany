@@ -429,7 +429,7 @@
     </button>
     <div class="dropdown-content">
         <a href="volunteerRegister.html">Edit</a>
-        <a href="beneficiarySchedule.html">Schedule</a>
+        <a th:href="@{'/volunteerCalendar/' + ${vol.id}}">Schedule</a>
         <a href="home.html">Log Out</a>
     </div>
 </div>
@@ -452,7 +452,7 @@
                                     th:text="${beneficiary.myInterestsList}">Cinema</span></p>
                         </div>
                         <!-- Button to delete the scheduled activity -->
-                        <form th:action="@{'/delete/' + ${beneficiary.id}}" method="post" style="display: inline;">
+                        <form th:action="@{'/delete/' + ${vol.id} + '/' + ${beneficiary.id}}" method="post" style="display: inline;">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </div>
