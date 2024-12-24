@@ -57,8 +57,7 @@ public class BeneficiaryController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = {"/beneficiaryProfile", "/beneficiaryProfile/"})
-    public String getProfileGet(Model model) {
-         model.addAttribute("beneficiary", beneficiaryService.getBeneficiary());
+    public String getProfileGet() {
         return "beneficiaryProfile";
     }
 
