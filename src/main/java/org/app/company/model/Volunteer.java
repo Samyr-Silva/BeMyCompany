@@ -4,7 +4,9 @@ import org.app.company.services.VolunteerService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class Volunteer {
@@ -14,11 +16,11 @@ public class Volunteer {
     private String lastName;
     private String image;
     private Integer age;
-    private Integer phone;
+    private String phone;
     private String email;
     private String password;
     private List<String> myInterestsList = new ArrayList<>();
-    private List<Beneficiary> myBeneficiaries;
+    private Set<Beneficiary> myBeneficiaries;
     private String location;
 
 
@@ -32,17 +34,24 @@ public class Volunteer {
 
 //----------------------METHODS-----------------------------
     public Volunteer(){
-        this.myBeneficiaries = new ArrayList<>();
+        this.myBeneficiaries = new HashSet<>();
         populateMyInterestsList();
     }
 
-    public List<Beneficiary> getMyBeneficiaries() {
+    public Set<Beneficiary> getMyBeneficiaries() {
         return myBeneficiaries;
     }
 
-    public void addBeneiciary(Beneficiary beneficiary) {
-        myBeneficiaries.add(beneficiary);
+    public void addBeneficiary(Beneficiary beneficiary) {
+        for (String interest : beneficiary.getMyInterestsList()) {
+            for (String myInterest : myInterestsList) {
+                if ((beneficiary.getMyInterestsList().size() == myInterestsList.size()) && interest.equals(myInterest)) {
+                    myBeneficiaries.add(beneficiary); // HashSet evita duplicatas automaticamente
+                }
+            }
+        }
     }
+
     public boolean removeBeneficiaryById(int id) {
         return this.myBeneficiaries.removeIf(beneficiary -> beneficiary.getId() == id);
     }
@@ -90,11 +99,11 @@ public class Volunteer {
         this.age = age;
     }
 
-    public Integer getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(Integer phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -191,3 +200,5 @@ public class Volunteer {
         this.location = location;
     }
 }
+
+
