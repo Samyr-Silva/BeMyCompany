@@ -1,7 +1,9 @@
 package org.app.company.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Beneficiary {
 
@@ -16,6 +18,7 @@ public class Beneficiary {
     private String location;
 
     private List<String> myInterestsList = new ArrayList<>();
+    private Set<Volunteer> myVolunteers;
 
     //--------------------INTERESTS------------------------
 
@@ -40,8 +43,29 @@ public class Beneficiary {
     }
 
     public Beneficiary() {
+        this.myVolunteers = new HashSet<>();
         populateMyInterestsList();
     }
+
+    public Set<Volunteer> getMyVolunteers() {
+        return myVolunteers;
+    }
+
+    public void addVolunteer(Volunteer volunteer) {
+        for (String inte : volunteer.getMyInterestsList()) {
+            for (String myInte : myInterestsList) {
+                if ((volunteer.getMyInterestsList().size() == myInterestsList.size()) && inte.equals(myInte)) {
+                    myVolunteers.add(volunteer); // HashSet evita duplicatas automaticamente
+                }
+            }
+        }
+    }
+
+
+    public boolean removeVolunteerById(Integer id){
+        return this.myVolunteers.removeIf(volunteer -> volunteer.getId() == id);
+    }
+
 
     public Integer getId() {
         return id;

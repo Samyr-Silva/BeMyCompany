@@ -7,19 +7,19 @@ import org.app.company.services.VolunteerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class BeneficiaryController {
 
     @Autowired
-    private VolunteerService volunteerService;
+    private BeneficiaryService beneficiaryService;
 
     @Autowired
-    private BeneficiaryService beneficiaryService;
+    private VolunteerService volunteerService;
+
     @RequestMapping(method = RequestMethod.GET, path = {"/beneficiaryLogin", "/beneficiaryLogin/"})
     public String getLoginPage() {
         return "beneficiaryLogin";
@@ -30,7 +30,7 @@ public class BeneficiaryController {
         return "beneficiaryRegister";
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = {"/beneficiaryRegister", "beneficiaryRegister/"})
+    @RequestMapping(method = RequestMethod.POST, path = {"/beneficiaryRegister", "/beneficiaryRegister/"})
     public String addBeneficiary(@RequestBody Beneficiary beneficiary) {
         beneficiaryService.addBeneficiary(beneficiary);
         return "beneficiaryProfile";
@@ -40,25 +40,56 @@ public class BeneficiaryController {
     public String getProfile(
             @RequestParam("email") String email,
             @RequestParam("password") String password,
+            HttpSession session,
             Model model
     ) {
-        // Verifica se o email existe no banco de dados
         Beneficiary beneficiary = beneficiaryService.checkLogin(email);
 
         if (beneficiary == null || !beneficiary.getPassword().equals(password)) {
-            // Adiciona uma mensagem de erro ao modelo e redireciona para a página de login
             model.addAttribute("error", "Invalid email or password");
             return "beneficiaryLogin";
         }
 
-        // Adiciona o voluntário ao modelo e carrega a página de perfil
+        session.setAttribute("beneficiary", beneficiary);
+
         model.addAttribute("ben", beneficiary);
+        model.addAttribute("volunteers", beneficiary.getMyVolunteers());
+
         return "beneficiaryProfile";
     }
 
     @RequestMapping(method = RequestMethod.GET, path = {"/beneficiaryProfile", "/beneficiaryProfile/"})
-    public String getProfileGet() {
+    public String getProfileGet(HttpSession session, Model model) {
+        Beneficiary beneficiary = (Beneficiary) session.getAttribute("beneficiary");
+
+        if (beneficiary == null) {
+            return "redirect:/beneficiaryLogin";
+        }
+
+        model.addAttribute("ben", beneficiary);
+        model.addAttribute("volunteers", beneficiary.getMyVolunteers());
+
         return "beneficiaryProfile";
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = {"/addSchedule", "/addSchedule/"})
+    public String getSchedule(HttpSession session) {
+        Beneficiary beneficiary = (Beneficiary) session.getAttribute("beneficiary");
+
+        if (beneficiary != null) {
+            beneficiaryService.addVolunteerToBeneficiary(beneficiary.getId(), volunteerService.list());
+        }
+
+        return "redirect:/beneficiaryProfile";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = {"/beneficiaryCalendar/{id}", "/beneficiaryCalendar/{id}/"})
+    public String getCalendar(
+            @PathVariable int id,
+            Model model) {
+        Beneficiary beneficiary = beneficiaryService.findBeneficiaryById(id);
+        model.addAttribute("ben", beneficiary);
+        model.addAttribute("volunteers", beneficiary.getMyVolunteers());
+        return "beneficiaryCalendar";
+    }
 }

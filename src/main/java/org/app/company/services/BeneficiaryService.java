@@ -1,8 +1,11 @@
 package org.app.company.services;
 
+
 import org.app.company.model.Beneficiary;
 import org.app.company.model.Volunteer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +15,11 @@ public class BeneficiaryService {
 
     private List<Beneficiary> beneficiaryList = new ArrayList<>();
 
-    public BeneficiaryService(){
+    @Autowired
+    private VolunteerService volunteerService;
+
+
+    public BeneficiaryService() {
         Beneficiary beneficiary = new Beneficiary();
         beneficiary.setFirstName("Ze mariuso");
         beneficiary.setAge(68);
@@ -21,8 +28,17 @@ public class BeneficiaryService {
         beneficiary.setImage("https://i.ibb.co/55vvfdz/beneficiary-man-1.png");
         beneficiary.setEmail("mariuso.santos@gmail.com");
         beneficiary.setPassword("mari");
-        beneficiary.setLikesCrochet(false);
         beneficiary.setLikesFootball(false);
+
+        Beneficiary beneficiary4 = new Beneficiary();
+        beneficiary4.setFirstName("Helena");
+        beneficiary4.setAge(88);
+        beneficiary4.setId(4);
+        beneficiary4.setLocation("Lisboa");
+        beneficiary4.setImage("https://i.ibb.co/XYjJFLp/beneficiary-woman-3.png");
+        beneficiary4.setEmail("helena.santos@gmail.com");
+        beneficiary4.setPassword("hel");
+        beneficiary4.setLikesFootball(false);
 
 
         Beneficiary beneficiary2 = new Beneficiary();
@@ -38,6 +54,7 @@ public class BeneficiaryService {
         beneficiary2.setLikesCinema(false);
         beneficiary2.setLikesFootball(false);
 
+
         Beneficiary beneficiary3 = new Beneficiary();
         beneficiary3.setFirstName("Mauricio");
         beneficiary3.setAge(98);
@@ -50,13 +67,15 @@ public class BeneficiaryService {
         beneficiary3.setLikesCinema(false);
         beneficiary3.setLikesFootball(false);
 
+
         addBeneficiary(beneficiary);
         addBeneficiary(beneficiary2);
         addBeneficiary(beneficiary3);
+        addBeneficiary(beneficiary4);
 
     }
 
-    public Beneficiary checkLogin(String email){
+    public Beneficiary checkLogin(String email) {
         for (Beneficiary beneficiary : beneficiaryList) {
             if (beneficiary.getEmail().equals(email)) {
                 return beneficiary;
@@ -65,11 +84,45 @@ public class BeneficiaryService {
         return null; // Retorna null se o voluntário não for encontrado
     }
 
-    public void addBeneficiary (Beneficiary beneficiary){
+    public Beneficiary findBeneficiaryById(int id) {
+        for (Beneficiary beneficiary : beneficiaryList) {
+            if (beneficiary.getId() == id) {
+                return beneficiary;
+            }
+        }
+        return null; // Retorna null se não encontrar o voluntário
+    }
+
+    public void addVolunteerToBeneficiary(int beneficiaryId, List<Volunteer> volunteerList) {
+        // Encontra o beneficiário pelo ID
+        Beneficiary beneficiary = findBeneficiaryById(beneficiaryId);
+        if (beneficiary != null) {
+            for (Volunteer volunteer : volunteerList){
+                if((volunteer.getMyInterestsList().size() == beneficiary.getMyInterestsList().size())){
+                    beneficiary.addVolunteer(volunteer);
+                }
+            }
+        }
+    }
+
+    public boolean removeVolunteerFromBeneficiary(int volunteerId, int beneficiaryId) {
+        Beneficiary beneficiary = findBeneficiaryById(beneficiaryId);
+        if (beneficiary != null) {
+            return beneficiary.removeVolunteerById(volunteerId);
+        }
+        return false;
+    }
+
+    public void createToList(Beneficiary beneficiary) {
         beneficiaryList.add(beneficiary);
     }
 
-    public List<Beneficiary> getBeneficiaryList(){
+    public void addBeneficiary(Beneficiary beneficiary) {
+        beneficiaryList.add(beneficiary);
+    }
+
+    public List<Beneficiary> getBeneficiaryList() {
         return beneficiaryList;
     }
+
 }

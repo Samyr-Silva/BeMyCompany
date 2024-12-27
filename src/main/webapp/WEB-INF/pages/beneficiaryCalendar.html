@@ -256,23 +256,23 @@ footer a:hover {
     </div>
 </nav>
 <div>
-    <a href="/BeMyCompany/volunteerProfile.html">Go Back</a>
+    <a href="/BeMyCompany/beneficiaryProfile.html">Go Back</a>
 </div>
 
 <div class="container">
-    <h1 th:text="${vol.firstName}" class="batota">Beneficiaries of Volunteer:</h1>
+    <h1 th:text="${ben.firstName}" class="batota">Beneficiaries of Volunteer:</h1>
     <h2 class="batota">Beneficiary List:</h2>
 
     <!-- Exibe se existirem beneficiários -->
-    <div th:if="${beneficiaries != null && beneficiaries.size() > 0}">
+    <div th:if="${volunteers != null && volunteers.size() > 0}">
         <ul class="beneficiary-list">
             <!-- Percorre a lista de beneficiários -->
-            <div th:each="beneficiary : ${beneficiaries}" class="beneficiary-item">
+            <div th:each="vol : ${volunteers}" class="beneficiary-item">
                 <li>
-                    <img th:src="${beneficiary.image}" alt="Beneficiary Image">
-                    <h3 th:text="${beneficiary.firstName}">John Doe</h3>
-                    <p th:text="'Age: ' + ${beneficiary.age}">Age: 30</p>
-                    <p th:text="'Location: ' + ${beneficiary.location}">Location: Lisbon</p>
+                    <img th:src="${vol.image}" alt="Beneficiary Image">
+                    <h3 th:text="${vol.firstName}">John Doe</h3>
+                    <p th:text="'Age: ' + ${vol.age}">Age: 30</p>
+                    <p th:text="'Location: ' + ${vol.location}">Location: Lisbon</p>
                     <button class="btn">call</button>
                 </li>
             </div>
@@ -310,7 +310,7 @@ footer a:hover {
     </script>
 
     <!-- Caso não existam beneficiários -->
-    <div th:if="${beneficiaries == null || beneficiaries.size() == 0}" class="no-beneficiaries">
+    <div th:if="${volunteers == null || volunteers.size() == 0}" class="no-beneficiaries">
         <p>No beneficiaries assigned to this volunteer.</p>
     </div>
 </div>

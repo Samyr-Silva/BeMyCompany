@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 public class VolunteerService {
 
 
+    @Autowired
     private BeneficiaryService beneficiaryService = new BeneficiaryService();
     private List<Volunteer> volunteerList = new ArrayList<>();
 
@@ -24,14 +26,16 @@ public class VolunteerService {
         volunteer.setLocation("Lisboa");
         volunteer.setImage("https://i.ibb.co/RhhLrMG/volunteer-man-2.png");
         volunteer.setEmail("maumau.silva@gmail.com");
-        volunteer.setLikesCrochet(false);
+        volunteer.setLikesCinema(false);
         volunteer.setLikesFootball(false);
         volunteer.setLikesDomino(false);
 
         List<Beneficiary> beneficiaries = beneficiaryService.getBeneficiaryList();
         if (!beneficiaries.isEmpty()) {
-            volunteer.addBeneiciary(beneficiaries.get(0));
-            volunteer.addBeneiciary(beneficiaries.get(1));// Adicionando o primeiro beneficiário (por exemplo)
+            volunteer.addBeneficiary(beneficiaries.get(0));
+            volunteer.addBeneficiary(beneficiaries.get(1));// Adicionando o primeiro beneficiário (por exemplo)
+            volunteer.addBeneficiary(beneficiaries.get(2));
+            volunteer.addBeneficiary(beneficiaries.get(3));
         }
 
         Volunteer volunteer2 = new Volunteer();
@@ -58,15 +62,34 @@ public class VolunteerService {
 
         List<Beneficiary> beneficiariesOther = beneficiaryService.getBeneficiaryList();
         if (!beneficiaries.isEmpty()) {
-            volunteer3.addBeneiciary(beneficiariesOther.get(0));
-            volunteer3.addBeneiciary(beneficiariesOther.get(1));
-            volunteer3.addBeneiciary(beneficiariesOther.get(2));
+            volunteer3.addBeneficiary(beneficiariesOther.get(0));
+            volunteer3.addBeneficiary(beneficiariesOther.get(1));
+            volunteer3.addBeneficiary(beneficiariesOther.get(2));
+            volunteer3.addBeneficiary(beneficiariesOther.get(3));
         }
 
+
+        Volunteer volunteer4 = new Volunteer();
+        volunteer4.setFirstName("Suzana");
+        volunteer4.setAge(23);
+        volunteer4.setId(4);
+        volunteer4.setLocation("Aveiro");
+        volunteer4.setImage("https://i.ibb.co/5crktcj/volunteer-woman-3.png");
+        volunteer4.setEmail("suzana.silva@gmail.com");
+        volunteer4.setPassword("suzan");
+        volunteer4.setLikesFootball(false);
+        volunteer4.setLikesCrochet(false);
+        volunteer4.setLikesDomino(false);
+        volunteer4.setLikesCinema(false);
+        List<Beneficiary> beneficiariesOtherAnother = beneficiaryService.getBeneficiaryList();
+        volunteer4.addBeneficiary(beneficiariesOtherAnother.get(0));
+        volunteer4.addBeneficiary(beneficiariesOtherAnother.get(1));
+        volunteer4.addBeneficiary(beneficiariesOtherAnother.get(2));
 
         addVolunteer(volunteer);
         addVolunteer(volunteer2);
         addVolunteer(volunteer3);
+        addVolunteer(volunteer4);
     }
 
     public void addVolunteer (Volunteer volunteer){
@@ -75,7 +98,7 @@ public class VolunteerService {
 
     public Volunteer checkLogin(String email) {
         for (Volunteer volunteer : volunteerList) {
-            if (volunteer.getEmail().equals(email)) { // Use equals para comparar Strings
+            if (volunteer.getEmail().equals(email)) {
                 return volunteer;
             }
         }
@@ -86,15 +109,11 @@ public class VolunteerService {
         return volunteerList;
     }
 
-    public List<Beneficiary> listOfBeneficiaries(int volunteerId) {
-        Volunteer volunteer = findVolunteerById(volunteerId);
-        return volunteer != null ? volunteer.getMyBeneficiaries() : new ArrayList<>();
-    }
 
     public boolean addBeneficiaryToVolunteer(int volunteerId, Beneficiary beneficiary) {
         Volunteer volunteer = findVolunteerById(volunteerId);
         if (volunteer != null) {
-            volunteer.addBeneiciary(beneficiary);
+            volunteer.addBeneficiary(beneficiary);
             return true;
         }
         return false;
@@ -117,12 +136,7 @@ public class VolunteerService {
         return null; // Retorna null se não encontrar o voluntário
     }
 
-    public List<Beneficiary> myList(int id){
-        for (Volunteer volunteer : volunteerList){
-            if (volunteer.getId() == id){
-                return volunteer.getMyBeneficiaries();
-            }
-        }
-        return null;
+    public void createToList(Volunteer volunteer){
+        volunteerList.add(volunteer);
     }
 }

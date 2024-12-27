@@ -426,20 +426,37 @@
                 alt="User Icon">
     </button>
     <div class="dropdown-content">
-        <a href="beneficiaryRegister.html">Edit</a>
-        <a href="beneficiarySchedule.html">Schedule</a>
+        <a th:href="@{'/beneficiaryCalendar/' + ${ben.id}}">Schedule</a>
         <a href="home.html">Log Out</a>
     </div>
 </div>
 
 <div class="container">
-    <!-- Left section for activities -->
     <div class="scheduled-activities">
         <h2>Scheduled Activities</h2>
         <div id="scheduled-items">
-            <p>No activities scheduled yet.</p>
+            <div id="scheduled-items-container">
+                <!-- Itera sobre os voluntários -->
+                <div th:each="volunteer : ${volunteers}" class="schedule-item">
+                    <div class="volunteer-card">
+                        <!-- Imagem do voluntário -->
+                        <img th:src="@{${volunteer.image}}" alt="Volunteer Image">
+                        <div class="volunteer-info">
+                            <p><strong>Name:</strong> <span th:text="${volunteer.firstName}">Mauricia Doe</span></p>
+                            <p><strong>Age:</strong> <span th:text="${volunteer.age}">82</span></p>
+                            <p><strong>Location:</strong> <span th:text="${volunteer.location}">New York</span></p>
+                            <p><strong>Common Interests:</strong> <span
+                                    th:text="${volunteer.myInterestsList}">Cinema</span></p>
+                        </div>
+                        <!-- Formulário para excluir a atividade -->
+                        <form th:action="@{'/delete/' + ${volunteer.id}}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <a href="beneficiarySchedule.html" class="btn btn-primary">Schedule New Activity</a>
+        <a th:href="@{/addSchedule}" class="btn btn-primary">Add Schedule Activity</a>
     </div>
 
     <!-- Right section for image and description -->
@@ -460,91 +477,11 @@
                     th:text="${ben.myInterestsList}">Traveling, Reading, Volunteering</span></p>
         </div>
     </div>
+
+    <!-- Left section for volunteer profile -->
+
 </div>
 
-<script>
-    const scheduledItemsContainer = document.getElementById('scheduled-items');
-
-    // Function to delete a scheduled activity
-    function deleteScheduled(index) {
-      const activities = JSON.parse(localStorage.getItem('scheduledActivities')) || [];
-      activities.splice(index, 1); // Remove the activity at the given index
-      localStorage.setItem('scheduledActivities', JSON.stringify(activities)); // Update localStorage
-      loadScheduledActivities(); // Reload activities
-    }
-
-    // Load and display scheduled activities
-    function loadScheduledActivities() {
-      const activities = JSON.parse(localStorage.getItem('scheduledActivities')) || [];
-
-      // Clear current contents of scheduled items
-      scheduledItemsContainer.innerHTML = '';
-
-      // List of users (This can be expanded with more users)
-      const users = [
-        {
-          name: "Joana Campos",
-          age: 28,
-          phone: "+1234567890",
-          location: "Lisboa",
-          photo: "https://i.ibb.co/cyKLp5b/volunteer-woman-2.png",
-          commonInterests: "c"
-        },
-        {
-          name: "Mia Ferreira",
-          age: 30,
-          phone: "+1234567891",
-          location: "Lisboa",
-          photo: "https://i.ibb.co/5crktcj/volunteer-woman-3.png",
-          commonInterests: "Domino, Crochet, Cinema"
-        },
-        {
-          name: "Francisco Silva",
-          age: 32,
-          phone: "+1234567892",
-          location: "Lisboa",
-          photo: "https://i.ibb.co/RhhLrMG/volunteer-man-2.png",
-          commonInterests: "Domino, Cooking, Football"
-        },
-        {
-          name: "Roberto Pereira",
-          age: 35,
-          phone: "+1234567893",
-          location: "Lisboa",
-          photo: "https://i.ibb.co/cx9c4zG/volunteer-man-1.png",
-          commonInterests: "Cinema"
-        }
-      ];
-
-      // If there are no activities, display a message
-      if (activities.length === 0) {
-        scheduledItemsContainer.innerHTML = '<p>No activities scheduled yet.</p>';
-      } else {
-        // Loop through each activity and display it
-        activities.forEach((activity, index) => {
-          // Randomly select a user from the list of users
-          const randomUser = users[Math.floor(Math.random() * users.length)];
-
-          const activityDiv = document.createElement('div');
-          activityDiv.classList.add('schedule-item');
-          activityDiv.innerHTML = `
-                <img src="${randomUser.photo}" alt="Volunteer Image">
-                <div>
-                    <p><strong>${activity.weekday}</strong> - <strong>${activity.time}</strong> on <strong>${activity.date}</strong></p>
-                    <p><strong>Volunteer Name: </strong>${randomUser.name}</p>
-                    <p><strong>Volunteer Age: </strong>${randomUser.age}</p>
-                    <p><strong>Common Interests: </strong>${randomUser.commonInterests}</p>
-                    <button onclick="deleteScheduled(${index})">Delete</button>
-                </div>
-            `;
-          scheduledItemsContainer.appendChild(activityDiv);
-        });
-      }
-    }
-
-    // Load activities when the page is loaded
-    loadScheduledActivities();
-</script>
 <script>
     const fakeResponses = {
         "help": "This is an application to combat loneliness! You can register as a volunteer or an elderly person to spend time with others. For more information, check the 'About' page.",

@@ -8,13 +8,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class VolunteerController {
     @Autowired
     private VolunteerService volunteerService;
 
-    @RequestMapping(method = RequestMethod.GET, path = {"/volunteerLogin", "volunteerLogin/"})
+    @RequestMapping(method = RequestMethod.POST, path = {"/volunteerLogin", "volunteerLogin/"})
     public String getLoginPage() {
+        return "volunteerLogin";
+    }
+    @RequestMapping(method = RequestMethod.GET, path = {"/volunteerLogin", "volunteerLogin/"})
+    public String getLoginPageA() {
         return "volunteerLogin";
     }
 
@@ -23,16 +29,46 @@ public class VolunteerController {
         return "volunteerRegister";
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = {"/volunteerRegister", "volunteerRegister/"})
-    public String addVolunteer(@RequestBody Volunteer volunteer) {
-        volunteerService.addVolunteer(volunteer);
-        return "redirect:/volunteerProfile";
+    // Process the form and create a new volunteer
+    @RequestMapping(method = RequestMethod.POST, path = {"/volunteerRegister", "/volunteerRegister/"})
+    public String createVolunteer(
+            @RequestParam("firstname") String firstName,
+            @RequestParam("lastname") String lastName,
+            @RequestParam("age") int age,
+            @RequestParam("phone") String phone,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            @RequestParam("location") String location,
+            Model model,
+            HttpSession session
+    ) {
+        // Criação de um novo voluntário
+        Volunteer newVolunteer = new Volunteer();
+        newVolunteer.setFirstName(firstName);
+        newVolunteer.setLastName(lastName);
+        newVolunteer.setAge(age);
+        newVolunteer.setId(volunteerService.list().size() + 2); // Gerando ID
+        newVolunteer.setPhone(phone);
+        newVolunteer.setEmail(email);
+        newVolunteer.setPassword(password);
+        newVolunteer.setLocation(location);
+
+        // Salva o voluntário na lista
+        volunteerService.createToList(newVolunteer);
+
+        // Armazena o voluntário na sessão
+        session.setAttribute("volunteer", newVolunteer);
+
+        // Redireciona para a página de perfil após a criação
+        return "redirect:/volunteerProfile"; // Redireciona para a página de perfil
     }
+
 
     @RequestMapping(method = RequestMethod.POST, path = {"/volunteerProfile", "/volunteerProfile/"})
     public String getProfile(
             @RequestParam("email") String email,
             @RequestParam("password") String password,
+            HttpSession session,
             Model model
     ) {
         // Verifica se o email existe no banco de dados
@@ -44,14 +80,25 @@ public class VolunteerController {
             return "volunteerLogin";
         }
 
+        session.setAttribute("volunteer", volunteer);
+
         // Adiciona o voluntário ao modelo e carrega a página de perfil
         model.addAttribute("vol", volunteer);
         model.addAttribute("beneficiaries", volunteer.getMyBeneficiaries()); // Lista específica do voluntário
-        return "volunteerProfile";
+        return "redirect:/volunteerProfile";
     }
 
     @RequestMapping(method = RequestMethod.GET, path = {"/volunteerProfile", "/volunteerProfile/"})
-    public String getProfileGet() {
+    public String getProfileGet(Model model, HttpSession session) {
+        Volunteer volunteer = (Volunteer) session.getAttribute("volunteer");
+
+        if (volunteer == null) {
+            model.addAttribute("error", "No volunteer found in session. Please log in.");
+            return "redirect:/volunteerLogin";
+        }
+
+        model.addAttribute("vol", volunteer);
+        model.addAttribute("beneficiaries", volunteer.getMyBeneficiaries());
         return "volunteerProfile";
     }
 
