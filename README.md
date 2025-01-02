@@ -1,20 +1,20 @@
 ## BeMyCompany
 
-BeMyCompany é um aplicativo inovador com foco em impacto social, desenvolvido para conectar idosos a voluntários dispostos a passar tempo com eles. Nosso objetivo é combater a solidão e promover o bem-estar emocional dos idosos, criando conexões significativas e fortalecendo a comunidade.
+BeMyCompany is an innovative app focused on social impact, designed to connect elderly individuals with volunteers willing to spend time with them. Our goal is to combat loneliness and promote the emotional well-being of seniors by fostering meaningful connections and strengthening the community.
 
-## ✨ Funcionalidades Principais
+## ✨ Key Features
 
-🔑 Login Seguro: Usuários podem criar contas e acessar o aplicativo de forma fácil e segura.
+🔑 Secure Login: Users can create accounts and access the app easily and safely.
 
-🔧 Adicionar Voluntário: Idosos podem procurar e adicionar voluntários ao seu círculo de convivência.
+🔧 Add Volunteer: Seniors can search for and add volunteers to their social circle.
 
-📞 Ligar para um Voluntário: Conexão direta via chamada, possibilitando comunicação rápida e eficaz.
+📞 Call a Volunteer: Direct connection via calls, enabling quick and effective communication.
 
-## 💪 Tecnologias Utilizadas
+## 💪 Technologies Used
 
-Frontend: HTML, CSS e JavaScript
+Frontend: HTML, CSS, and JavaScript
 
-Backend: Java e Spring Framework
+Backend: Java and Spring Framework
 
 ## Some Photos
 
