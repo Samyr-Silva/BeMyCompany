@@ -86,10 +86,22 @@ public class VolunteerService {
         volunteer4.addBeneficiary(beneficiariesOtherAnother.get(1));
         volunteer4.addBeneficiary(beneficiariesOtherAnother.get(2));
 
+        Volunteer volunteer5 = new Volunteer();
+        volunteer5.setFirstName("Fernanda");
+        volunteer5.setAge(28);
+        volunteer5.setId(5);
+        volunteer5.setLocation("Coimbra");
+        volunteer5.setImage("https://i.ibb.co/5crktcj/volunteer-woman-3.png");
+        volunteer5.setEmail("fer.silva@gmail.com");
+        volunteer5.setPassword("nanda");
+        volunteer5.setLikesFootball(false);
+
+
         addVolunteer(volunteer);
         addVolunteer(volunteer2);
         addVolunteer(volunteer3);
         addVolunteer(volunteer4);
+        addVolunteer(volunteer5);
     }
 
     public void addVolunteer (Volunteer volunteer){
