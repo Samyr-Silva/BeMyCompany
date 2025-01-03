@@ -21,10 +21,10 @@ public class BeneficiaryService {
 
     public BeneficiaryService() {
         Beneficiary beneficiary = new Beneficiary();
-        beneficiary.setFirstName("Ze mariuso");
+        beneficiary.setFirstName("João");
         beneficiary.setAge(68);
         beneficiary.setId(1);
-        beneficiary.setLocation("Lisboa");
+        beneficiary.setLocation("Braga");
         beneficiary.setImage("https://i.ibb.co/55vvfdz/beneficiary-man-1.png");
         beneficiary.setEmail("mariuso.santos@gmail.com");
         beneficiary.setPassword("mari");
