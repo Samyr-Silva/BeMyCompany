@@ -51,8 +51,8 @@ public class VolunteerService {
 
 
         Volunteer volunteer3 = new Volunteer();
-        volunteer3.setFirstName("aNDRE");
-        volunteer3.setAge(39);
+        volunteer3.setFirstName("Rui");
+        volunteer3.setAge(29);
         volunteer3.setId(3);
         volunteer3.setLocation("Braga");
         volunteer3.setImage("https://i.ibb.co/cx9c4zG/volunteer-man-1.png");
