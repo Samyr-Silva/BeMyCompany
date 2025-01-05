@@ -26,4 +26,4 @@ Backend: Java and Spring Framework
 
 #
 
-![Screenshot from 2025-01-02 14-05-35](https://github.com/user-attachments/assets/897a22bf-7051-4b24-86ba-9bc45568293e)
+![Screenshot from 2025-01-03 16-46-14](https://github.com/user-attachments/assets/8c7cf937-c2c7-4141-8687-3f1564cb0a5e)
